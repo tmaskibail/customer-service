@@ -147,3 +147,4 @@ buildNumber.properties
 mvnw*
 .idea
 
+*.log

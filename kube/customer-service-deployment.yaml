@@ -3,9 +3,9 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    name: customer-service
+    name: customer-service-deployment
     tier: backend
-  name: customer-service
+  name: customer-service-deployment
 spec:
   replicas: 3
   selector:
@@ -26,6 +26,12 @@ spec:
         - image: urthilak/customer-service:2
           name: customer-service
           resources: {}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
           ports:
             - containerPort: 8080
           env:

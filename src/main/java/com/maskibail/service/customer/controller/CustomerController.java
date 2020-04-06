@@ -33,7 +33,8 @@ public class CustomerController {
     }
 
     @PostMapping(path = "/customers/add")
-    public @ResponseBody Customer addNewCustomer(
+    public @ResponseBody
+    Customer addNewCustomer(
             @RequestParam String title,
             @RequestParam String firstName,
             @RequestParam String middleName,
@@ -50,6 +51,13 @@ public class CustomerController {
     @GetMapping(path = "/customers/all")
     public @ResponseBody
     Iterable<Customer> getAll() {
+        LOG.info("Received request to fetch all customers...");
         return customerRepository.findAll();
+    }
+
+    @GetMapping(path = "/health")
+    public String getHealth() {
+        LOG.info("HEALTH-CHECK: received query from {} ");
+        return "OK";
     }
 }
