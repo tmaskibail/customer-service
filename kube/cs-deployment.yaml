@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    name: customer-service
+    tier: backend
+  name: customer-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: customer-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        name: customer-service
+    spec:
+      containers:
+        - image: urthilak/customer-service:2
+          name: customer-service
+          resources: {}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SECRETS_DEMO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: spring-security
+                  key: spring.user.name
+            - name: SECRETS_DEMO_USER_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: spring-security
+                  key: spring.user.password
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+status: {}

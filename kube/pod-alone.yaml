@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    name: customer-service
+    env: dev
+    type: backend
+  name: customer-service
+spec:
+  containers:
+    - image: urthilak/customer-service:2
+      name: customer-service
+      resources: {}
+      ports:
+        - containerPort: 8080
+      env:
+        - name: SECRETS_DEMO_USER
+          valueFrom:
+           secretKeyRef:
+            name: spring-security
+            key: spring.user.name
+        - name: SECRETS_DEMO_USER_PASSWD
+          valueFrom:
+           secretKeyRef:
+             name: spring-security
+             key: spring.user.password
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+status: {}
