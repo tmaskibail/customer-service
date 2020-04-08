@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  LOG_DIR: /app/logs
+kind: ConfigMap
+metadata:
+  name: customer-service-configmap
+  namespace: default

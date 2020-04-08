@@ -1,13 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     name: customer-service-deployment
     tier: backend
   name: customer-service-deployment
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       name: customer-service
@@ -18,33 +17,56 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
       labels:
         name: customer-service
     spec:
       containers:
-        - image: urthilak/customer-service:2
+        - image: urthilak/customer-service:6
           name: customer-service
-          resources: {}
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
           ports:
             - containerPort: 8080
+              name: service-port
+          volumeMounts:
+            - name: logs-storage
+              mountPath: /app/logs
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/info
+              port: service-port
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/info
+              port: service-port
+            initialDelaySeconds: 20
+            periodSeconds: 10
           env:
             - name: SECRETS_DEMO_USER
               valueFrom:
                 secretKeyRef:
-                  name: spring-security
+                  name: customer-service-security
                   key: spring.user.name
             - name: SECRETS_DEMO_USER_PASSWD
               valueFrom:
                 secretKeyRef:
-                  name: spring-security
+                  name: customer-service-security
                   key: spring.user.password
+            - name: LOG_DIR
+              valueFrom:
+                configMapKeyRef:
+                 name: customer-service-configmap
+                 key: LOG_DIR
+      volumes:
+        - name: logs-storage
+          emptyDir: {}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 status: {}

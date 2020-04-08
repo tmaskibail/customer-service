@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+metadata:
+  name: customer-service
+build:
+  artifacts:
+  - image: urthilak/customer-service
+deploy:
+  kubectl:
+    manifests:
+    - kube/customer-service-configmap.yaml
+    - kube/customer-service-deployment.yaml
+    - kube/customer-service-nodePort.yaml
+    - kube/customer-service-security.yaml
+    - kube/dev-namespace.yaml

@@ -6,6 +6,7 @@ import com.maskibail.service.customer.repository.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,11 +54,5 @@ public class CustomerController {
     Iterable<Customer> getAll() {
         LOG.info("Received request to fetch all customers...");
         return customerRepository.findAll();
-    }
-
-    @GetMapping(path = "/health")
-    public String getHealth() {
-        LOG.info("HEALTH-CHECK: received query from {} ");
-        return "OK";
     }
 }
