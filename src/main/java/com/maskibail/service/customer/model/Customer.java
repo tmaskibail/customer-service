@@ -20,7 +20,6 @@ public class Customer {
     private Date createDate;
 
     public Customer(String title, String firstName, String middleName, String lastName, Date dob, Date createDate) {
-        this.id = id;
         this.title = title;
         this.firstName = firstName;
         this.middleName = middleName;

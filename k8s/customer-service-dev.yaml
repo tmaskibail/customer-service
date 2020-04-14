@@ -1,3 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+spec:
+  finalizers:
+    - kubernetes
+status:
+  phase: Active
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+  namespace: dev
+spec:
+  type: NodePort
+  ports:
+    - nodePort: 31844
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    name: customer-service
+---
+apiVersion: v1
+data:
+  spring.user.name: ZGVtbw==
+  spring.user.password: cGFzc3dvcmQ=
+kind: Secret
+metadata:
+  name: customer-service-security
+  namespace: dev
+type: Opaque
+---
+apiVersion: v1
+data:
+  LOG_DIR: /app/logs
+kind: ConfigMap
+metadata:
+  name: customer-service-configmap
+  namespace: dev
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -5,8 +48,9 @@ metadata:
     name: customer-service-deployment
     tier: backend
   name: customer-service-deployment
+  namespace: dev
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       name: customer-service
@@ -21,7 +65,7 @@ spec:
         name: customer-service
     spec:
       containers:
-        - image: urthilak/customer-service:6
+        - image: gcr.io/dev-env-274010/customer-service:latest
           name: customer-service
           ports:
             - containerPort: 8080
@@ -62,11 +106,12 @@ spec:
             - name: LOG_DIR
               valueFrom:
                 configMapKeyRef:
-                 name: customer-service-configmap
-                 key: LOG_DIR
+                  name: customer-service-configmap
+                  key: LOG_DIR
       volumes:
         - name: logs-storage
           emptyDir: {}
       dnsPolicy: ClusterFirst
       restartPolicy: Always
 status: {}
+---

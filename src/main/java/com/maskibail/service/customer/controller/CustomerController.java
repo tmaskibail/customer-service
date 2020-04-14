@@ -6,7 +6,6 @@ import com.maskibail.service.customer.repository.CustomerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +22,7 @@ public class CustomerController {
 
     @GetMapping(path = "/customers/{id}")
     public @ResponseBody
-    Customer getCustomer(@PathVariable("id") Long id) throws CustomerNotFoundException {
+    Customer getCustomer(@PathVariable("id") Long id) {
         LOG.info("Received request for customer id {}", id);
         Optional<Customer> customer = customerRepository.findById(id);
         if (!customer.isPresent()) {
@@ -54,5 +53,13 @@ public class CustomerController {
     Iterable<Customer> getAll() {
         LOG.info("Received request to fetch all customers...");
         return customerRepository.findAll();
+    }
+
+    //TODO: Dummy method. To be removed once the demo is over!
+    @GetMapping(path = "/customers/check/{id}")
+    public @ResponseBody
+    String checkEligibility(@PathVariable("id") Long id) {
+        LOG.info("Received request to check eligibility for customer {}", id);
+        return "Eligible for Current Account";
     }
 }
