@@ -51,7 +51,7 @@ public class CustomerController {
     @GetMapping(path = "/customers/all")
     public @ResponseBody
     Iterable<Customer> getAll() {
-        LOG.info("Received request to fetch all customers...");
+        LOG.info("Received request to fetch all customers!!...");
         return customerRepository.findAll();
     }
 
