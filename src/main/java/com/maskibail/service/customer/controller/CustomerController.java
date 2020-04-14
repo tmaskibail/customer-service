@@ -60,6 +60,6 @@ public class CustomerController {
     public @ResponseBody
     String checkEligibility(@PathVariable("id") Long id) {
         LOG.info("Received request to check eligibility for customer {}", id);
-        return "Eligible for Current Account";
+        return String.format("Customer %d is eligible for a Current Account", id);
     }
 }
