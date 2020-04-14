@@ -4,8 +4,9 @@ metadata:
   name: customer-service
 build:
   artifacts:
-  - image: urthilak/customer-service
+  - image: gcr.io/dev-env-274010/customer-service
 deploy:
   kubectl:
     manifests:
+    - k8s/base-admin-resources-dev.yaml
     - k8s/customer-service-dev.yaml
